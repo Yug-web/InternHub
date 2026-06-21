@@ -53,4 +53,3 @@ The database has 4 main tables that are linked together using Entity Framework C
 - **Deadlines:** Linked to a Company. Tracks upcoming due dates.
 
 ---
-*Built as a portfolio project to demonstrate backend C# development skills.*
