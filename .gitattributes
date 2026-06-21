@@ -1,0 +1,5 @@
+# Ignore frontend libraries from GitHub's language statistics
+wwwroot/lib/** linguist-vendored
+
+# Treat cshtml files as C# (or just let them be, but ignoring lib usually fixes it)
+*.cshtml linguist-language=C#
