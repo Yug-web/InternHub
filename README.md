@@ -1,304 +1,56 @@
-# 🎓 InternHub — Internship Application Tracker
+# InternHub 🎓
 
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-8.0-512BD4?logo=dotnet)
-![Entity Framework](https://img.shields.io/badge/Entity_Framework_Core-8.0-512BD4?logo=dotnet)
-![SQL Server](https://img.shields.io/badge/SQL_Server-LocalDB-CC2927?logo=microsoftsqlserver)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap)
-![License](https://img.shields.io/badge/License-MIT-green)
+InternHub is a simple, easy-to-use ASP.NET Core MVC web application I built to help students (like myself) keep track of their internship applications. 
 
-> A professional **ASP.NET Core 8 MVC** web application for tracking internship applications, interviews, and deadlines. Built as a portfolio project demonstrating real-world .NET development skills.
+When applying to dozens of companies, it's easy to lose track of where you applied, who you interviewed with, and what deadlines are coming up. I built this tool to solve that problem while getting hands-on experience with the .NET ecosystem.
+
+**Live Demo:** [http://internhub.somee.com](http://internhub.somee.com)
 
 ---
 
-## 📋 Project Overview
+### What it does
 
-InternHub helps students stay organized during their internship search by providing a centralized tracker for:
+- **Company Tracker:** Add and manage companies you're interested in.
+- **Application Status:** Track whether you've just applied, are interviewing, got an offer, or were rejected.
+- **Interview Logs:** Keep notes on when your interviews are happening and what type of interview it is (Technical, HR, etc.).
+- **Deadlines:** Never miss an application or assessment deadline. 
 
-- 🏢 **Companies** — Manage target companies with contact info
-- 📄 **Applications** — Track applications with status pipeline
-- 🎥 **Interviews** — Log technical, HR, and coding rounds
-- ⏰ **Deadlines** — Never miss OA dates or submission deadlines
-- 📊 **Dashboard** — At-a-glance statistics and success rate
+### Tech Stack
 
----
+I kept the architecture straightforward to focus on mastering the core concepts of ASP.NET and relational databases:
 
-## ✨ Features
+- **Framework:** ASP.NET Core 8.0 MVC
+- **Database:** SQL Server (Entity Framework Core)
+- **Frontend:** HTML, Razor Views, and Bootstrap 5
+- **Data Access:** LINQ and Repository-like patterns directly in the controllers.
 
-| Feature | Description |
-|---|---|
-| Full CRUD | Create, Read, Update, Delete for all 4 modules |
-| Status Pipeline | Applied → OA → Interview → Selected / Rejected |
-| Search & Filter | Search by company/role, filter by status/type/priority |
-| Dashboard Stats | Total apps, success rate, active count, upcoming deadlines |
-| Smart Alerts | Days-remaining counter, overdue detection, TODAY highlight |
-| Responsive UI | Mobile-friendly Bootstrap 5 dark theme |
-| Data Seeding | Auto-seeds sample data on first run |
-| Cascade Delete | Deleting a company removes all related records |
+### Local Setup
 
----
+If you want to pull this down and run it on your own machine:
 
-## 🛠️ Technology Stack
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Yug-web/InternHub.git
+   ```
+2. Make sure you have the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download) installed.
+3. Open a terminal in the project folder and run:
+   ```bash
+   dotnet ef database update
+   ```
+   *(This will create the SQL Server database using EF Core)*
+4. Run the app:
+   ```bash
+   dotnet run
+   ```
+5. Open your browser and go to `http://localhost:5000`
 
-| Technology | Version | Purpose |
-|---|---|---|
-| **ASP.NET Core MVC** | 8.0 | Web framework (Controllers, Views, Routing) |
-| **Entity Framework Core** | 8.0 | ORM — database access using C# |
-| **SQL Server LocalDB** | 2022 | Database (MSSQL) |
-| **LINQ** | — | Querying database with C# |
-| **Razor Views** | — | Server-side HTML templating (.cshtml) |
-| **Bootstrap 5.3** | 5.3.2 | Responsive UI framework |
-| **Bootstrap Icons** | 1.11 | Icon library |
-| **C# 12** | — | Primary programming language |
+### Database Design
 
----
-
-## 🏛️ MVC Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Browser / Client                         │
-└───────────────────────────┬─────────────────────────────────┘
-                            │  HTTP Request (URL)
-                            ▼
-┌─────────────────────────────────────────────────────────────┐
-│               ASP.NET Core Router                           │
-│         {controller}/{action}/{id?}                         │
-└───────────────────────────┬─────────────────────────────────┘
-                            │
-                            ▼
-┌─────────────────── CONTROLLERS ─────────────────────────────┐
-│  HomeController          → Dashboard with LINQ stats        │
-│  CompaniesController     → Company CRUD + search            │
-│  ApplicationsController  → Application CRUD + filter        │
-│  InterviewsController    → Interview CRUD + type filter      │
-│  DeadlinesController     → Deadline CRUD + priority filter  │
-└───────────┬───────────────────────────┬─────────────────────┘
-            │ queries via EF Core        │ returns to
-            ▼                           ▼
-┌─────── DATA LAYER ──────┐   ┌────── VIEWS (.cshtml) ───────┐
-│  AppDbContext           │   │  Razor templates             │
-│  Entity Framework Core  │   │  Bootstrap 5 components      │
-│  LINQ Queries           │   │  Tag Helpers                 │
-│  SQL Server LocalDB     │   │  Form Validation             │
-└─────────────────────────┘   └──────────────────────────────┘
-```
+The database has 4 main tables that are linked together using Entity Framework Core foreign keys:
+- **Companies:** The core table. If a company is deleted, all related applications and interviews are deleted with it (Cascade Delete).
+- **Applications:** Linked to a Company. Tracks the role and status.
+- **Interviews:** Linked to an Application. Tracks rounds and dates.
+- **Deadlines:** Linked to a Company. Tracks upcoming due dates.
 
 ---
-
-## 🗃️ Database Design
-
-### Entity Relationship Diagram
-
-```
-Companies (PK: Id)
-├── Id         INT          PRIMARY KEY  AUTO-INCREMENT
-├── Name       NVARCHAR(100) NOT NULL    [INDEX]
-├── Industry   NVARCHAR(50)  NOT NULL
-├── Location   NVARCHAR(100) NOT NULL
-├── Website    NVARCHAR(200) NULL
-├── HREmail    NVARCHAR(100) NULL
-└── CreatedAt  DATETIME2    NOT NULL
-
-Applications (PK: Id, FK: CompanyId → Companies.Id CASCADE)
-├── Id              INT          PRIMARY KEY
-├── CompanyId       INT          FOREIGN KEY → Companies.Id
-├── Role            NVARCHAR(100) NOT NULL
-├── Location        NVARCHAR(100) NOT NULL
-├── Stipend         INT          NULL
-├── ApplicationDate DATETIME2    NOT NULL   [INDEX]
-├── Deadline        DATETIME2    NULL
-├── Status          NVARCHAR(50) NOT NULL   [INDEX: Applied/OA/Interview/Selected/Rejected]
-├── Notes           NVARCHAR(500) NULL
-└── CreatedAt       DATETIME2    NOT NULL
-
-Interviews (PK: Id, FK: CompanyId → Companies.Id CASCADE)
-├── Id            INT          PRIMARY KEY
-├── CompanyId     INT          FOREIGN KEY → Companies.Id
-├── Role          NVARCHAR(100) NOT NULL
-├── InterviewDate DATETIME2    NOT NULL
-├── InterviewType NVARCHAR(50) NOT NULL   [Technical / HR / Coding]
-├── Notes         NVARCHAR(1000) NULL
-└── CreatedAt     DATETIME2    NOT NULL
-
-Deadlines (PK: Id)
-├── Id          INT          PRIMARY KEY
-├── Title       NVARCHAR(100) NOT NULL
-├── DueDate     DATETIME2    NOT NULL    [INDEX]
-├── Description NVARCHAR(500) NULL
-├── Priority    NVARCHAR(20) NOT NULL    [High / Medium / Low]
-└── CreatedAt   DATETIME2    NOT NULL
-```
-
-### Relationships
-- `Company` → `Applications`: **One-to-Many**, Cascade Delete
-- `Company` → `Interviews`: **One-to-Many**, Cascade Delete
-
----
-
-## ⚙️ Installation & Setup
-
-### Prerequisites
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8)
-- SQL Server Express LocalDB (comes with Visual Studio) or SQL Server
-
-### Quick Start
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/InternHub.git
-cd InternHub
-
-# 2. Restore NuGet packages
-dotnet restore
-
-# 3. Run the application (auto-creates DB, runs migrations, seeds data)
-dotnet run
-```
-
-Open your browser at **`https://localhost:5001`** or **`http://localhost:5000`**
-
-### Connection String (appsettings.json)
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=InternHubDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-  }
-}
-```
-
-> **For full SQL Server:** Replace `(localdb)\\MSSQLLocalDB` with `your-server-name`
-
----
-
-## 📁 Project Structure
-
-```
-InternHub/
-├── Controllers/                    ← Handle requests, call DB, return Views
-│   ├── HomeController.cs           ← Dashboard (LINQ stats aggregation)
-│   ├── CompaniesController.cs      ← Company CRUD + search
-│   ├── ApplicationsController.cs   ← Application CRUD + search + status filter
-│   ├── InterviewsController.cs     ← Interview CRUD + type filter
-│   └── DeadlinesController.cs      ← Deadline CRUD + priority filter
-│
-├── Models/                         ← C# classes → SQL Server tables
-│   ├── Company.cs
-│   ├── Application.cs
-│   ├── Interview.cs
-│   ├── Deadline.cs
-│   ├── Enums.cs                    ← ApplicationStatus, InterviewType, Priority
-│   └── ViewModels/
-│       └── DashboardViewModel.cs   ← Aggregated stats for Dashboard
-│
-├── Data/                           ← Database layer
-│   ├── AppDbContext.cs             ← EF Core DbContext (relationships, indexes)
-│   └── DbSeeder.cs                 ← Seeds sample data on first run
-│
-├── Views/                          ← Razor HTML templates
-│   ├── Shared/
-│   │   ├── _Layout.cshtml          ← Master layout (navbar, footer, toasts)
-│   │   └── _ValidationScriptsPartial.cshtml
-│   ├── Home/Index.cshtml           ← Dashboard
-│   ├── Companies/                  ← Index, Create, Edit, Details, Delete
-│   ├── Applications/               ← Index, Create, Edit, Details, Delete
-│   ├── Interviews/                 ← Index, Create, Edit, Details, Delete
-│   └── Deadlines/                  ← Index, Create, Edit, Details, Delete
-│
-├── Migrations/                     ← EF Core migration history
-├── wwwroot/
-│   ├── css/site.css                ← Dark navy custom theme
-│   └── js/site.js                  ← Nav highlighting, counter animations
-│
-├── appsettings.json                ← Configuration (connection string)
-├── Program.cs                      ← App startup, DI, middleware pipeline
-└── InternHub.csproj                ← Project file (NuGet packages)
-```
-
----
-
-## 📸 Screenshots
-
-> Add screenshots of your running application here:
-
-| Page | Screenshot |
-|---|---|
-| Dashboard | *(Add screenshot)* |
-| Applications List | *(Add screenshot)* |
-| Add Application | *(Add screenshot)* |
-| Companies List | *(Add screenshot)* |
-| Deadline Tracker | *(Add screenshot)* |
-| Interview Tracker | *(Add screenshot)* |
-
-**To take screenshots:**
-1. Run the app with `dotnet run`
-2. Open `http://localhost:5000` in Chrome
-3. Press `F12` → Device toolbar (mobile view) or `Win + Shift + S` for snip
-
----
-
-## 🔧 Useful Commands
-
-```bash
-# Run the application
-dotnet run
-
-# Build without running
-dotnet build
-
-# Add a new EF Core migration (after changing models)
-dotnet ef migrations add YourMigrationName
-
-# Apply migrations to database
-dotnet ef database update
-
-# Drop and recreate database
-dotnet ef database drop --force
-dotnet ef database update
-
-# Publish for deployment
-dotnet publish -c Release -o ./publish
-```
-
----
-
-## 🔄 Application Status Flow
-
-```
-Applied ──→ OA Scheduled ──→ OA Completed ──→ Interview Scheduled ──→ Selected ✅
-                                                                    └──→ Rejected ❌
-```
-
----
-
-## 🚀 Future Improvements
-
-- [ ] **ASP.NET Core Identity** — User accounts (each student sees their own data)
-- [ ] **Email Notifications** — Deadline reminders via IEmailSender
-- [ ] **Chart.js Statistics** — Pie/bar charts for application breakdown
-- [ ] **Resume Upload** — Attach PDF resume per application (IFormFile)
-- [ ] **CSV Export** — Export applications to Excel via CsvHelper
-- [ ] **Pagination** — Page through large application lists
-- [ ] **Notes Rich Text** — Markdown support for interview notes
-
----
-
-## 🎤 Key Talking Points (Interview Ready)
-
-- **MVC Pattern**: Separation of concerns — Models (data shape), Controllers (logic), Views (UI)
-- **EF Core Code-First**: Wrote C# classes → EF generated SQL Server schema via migrations
-- **LINQ**: Used `Where()`, `Include()`, `OrderByDescending()`, `CountAsync()`, `Take()` throughout
-- **Dependency Injection**: AppDbContext injected into all controllers via constructor
-- **Data Annotations**: `[Required]`, `[StringLength]`, `[EmailAddress]` for model-level validation
-- **Relationships**: One-to-Many with Cascade Delete (Company → Applications, Interviews)
-- **Async/Await**: All controller actions are async for non-blocking DB operations
-- **Database Indexes**: Added on Name, Status, ApplicationDate, DueDate for query performance
-
----
-
-## 📝 License
-
-MIT License — free to use for portfolio and learning purposes.
-
----
-
-*Built with ❤️ using **ASP.NET Core 8 MVC** | .NET Developer Portfolio Project*
+*Built as a portfolio project to demonstrate backend C# development skills.*
