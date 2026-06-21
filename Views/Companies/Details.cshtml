@@ -1,0 +1,137 @@
+@model InternHub.Models.Company
+@{
+    ViewData["Title"] = "Company Details";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1><i class="bi bi-building me-2"></i>@Model.Name</h1>
+                <p>@Model.Industry &bull; @Model.Location</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-outline-custom">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <a asp-action="Index" class="btn-outline-custom">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Company Info Card -->
+        <div class="col-lg-4">
+            <div class="detail-card">
+                <div class="detail-header">
+                    <div style="font-size:2.5rem; margin-bottom:0.5rem;">🏢</div>
+                    <h4 class="mb-0">@Model.Name</h4>
+                    <small style="opacity:0.8;">Added @Model.CreatedAt.ToString("dd MMM yyyy")</small>
+                </div>
+                <div class="detail-body">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Industry</div>
+                        <div class="detail-field-value">@Model.Industry</div>
+                    </div>
+                    <div class="detail-field">
+                        <div class="detail-field-label">Location</div>
+                        <div class="detail-field-value"><i class="bi bi-geo-alt me-1"></i>@Model.Location</div>
+                    </div>
+                    <div class="detail-field">
+                        <div class="detail-field-label">Website</div>
+                        <div class="detail-field-value">
+                            @if (!string.IsNullOrEmpty(Model.Website))
+                            {
+                                <a href="@Model.Website" target="_blank">@Model.Website</a>
+                            }
+                            else { <span style="color:var(--text-muted);">Not provided</span> }
+                        </div>
+                    </div>
+                    <div class="detail-field">
+                        <div class="detail-field-label">HR Email</div>
+                        <div class="detail-field-value">
+                            @if (!string.IsNullOrEmpty(Model.HREmail))
+                            {
+                                <a href="mailto:@Model.HREmail">@Model.HREmail</a>
+                            }
+                            else { <span style="color:var(--text-muted);">Not provided</span> }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications at this company -->
+        <div class="col-lg-8">
+            <div class="data-card mb-3">
+                <div class="data-card-header">
+                    <h5><i class="bi bi-file-earmark-text me-2"></i>
+                        Applications (@Model.Applications.Count)
+                    </h5>
+                    <a asp-controller="Applications" asp-action="Create" class="btn-primary-custom" style="padding:5px 12px; font-size:0.8rem;">
+                        <i class="bi bi-plus"></i> Add
+                    </a>
+                </div>
+                <div class="data-card-body">
+                    @if (!Model.Applications.Any())
+                    {
+                        <div class="text-center py-3" style="color:var(--text-muted);">No applications for this company.</div>
+                    }
+                    else
+                    {
+                        <table class="table-dark-custom w-100">
+                            <thead><tr><th>Role</th><th>Status</th><th>Applied</th></tr></thead>
+                            <tbody>
+                                @foreach (var app in Model.Applications)
+                                {
+                                    <tr>
+                                        <td>@app.Role</td>
+                                        <td>
+                                            <span class="badge-status badge-@app.Status.ToString().ToLower()">
+                                                @app.Status
+                                            </span>
+                                        </td>
+                                        <td style="font-size:0.8rem; color:var(--text-muted);">@app.ApplicationDate.ToString("dd MMM yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+
+            <!-- Interviews at this company -->
+            <div class="data-card">
+                <div class="data-card-header">
+                    <h5><i class="bi bi-camera-video me-2"></i>
+                        Interviews (@Model.Interviews.Count)
+                    </h5>
+                </div>
+                <div class="data-card-body">
+                    @if (!Model.Interviews.Any())
+                    {
+                        <div class="text-center py-3" style="color:var(--text-muted);">No interviews logged for this company.</div>
+                    }
+                    else
+                    {
+                        <table class="table-dark-custom w-100">
+                            <thead><tr><th>Role</th><th>Type</th><th>Date</th></tr></thead>
+                            <tbody>
+                                @foreach (var iv in Model.Interviews)
+                                {
+                                    <tr>
+                                        <td>@iv.Role</td>
+                                        <td><span class="badge-status badge-@iv.InterviewType.ToString().ToLower()">@iv.InterviewType</span></td>
+                                        <td style="font-size:0.8rem; color:var(--text-muted);">@iv.InterviewDate.ToString("dd MMM yyyy")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

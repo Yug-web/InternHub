@@ -1,0 +1,121 @@
+@model IEnumerable<InternHub.Models.Company>
+@{
+    ViewData["Title"] = "Companies";
+    var search = ViewData["CurrentSearch"] as string;
+    var total  = ViewData["TotalCount"] is int t ? t : 0;
+}
+
+<div class="container-fluid px-4">
+    <!-- Page Header -->
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1><i class="bi bi-building me-2"></i>Companies</h1>
+                <p>Manage the companies you've applied to or are planning to apply to.</p>
+            </div>
+            <a asp-action="Create" class="btn-primary-custom">
+                <i class="bi bi-plus-circle-fill"></i> Add Company
+            </a>
+        </div>
+    </div>
+
+    <div class="data-card mb-4">
+        <!-- Search Bar -->
+        <div class="data-card-header">
+            <h5><i class="bi bi-building me-2"></i>
+                All Companies
+                <span class="ms-2" style="color:var(--text-muted); font-weight:400; font-size:0.85rem;">
+                    (@total found)
+                </span>
+            </h5>
+            <form method="get" asp-action="Index" class="d-flex gap-2 align-items-center">
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" name="search" class="form-control" placeholder="Search companies..."
+                           value="@search" style="min-width:220px;" />
+                </div>
+                <button type="submit" class="btn-primary-custom" style="padding:8px 16px;">Search</button>
+                @if (!string.IsNullOrEmpty(search))
+                {
+                    <a asp-action="Index" class="btn-outline-custom" style="padding:8px 14px;">Clear</a>
+                }
+            </form>
+        </div>
+
+        <div class="data-card-body">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5" style="color:var(--text-muted);">
+                    <i class="bi bi-building-slash fs-2 d-block mb-2"></i>
+                    @if (string.IsNullOrEmpty(search))
+                    {
+                        <span>No companies added yet. <a asp-action="Create">Add your first company!</a></span>
+                    }
+                    else
+                    {
+                        <span>No companies match "<strong>@search</strong>". <a asp-action="Index">Clear search</a></span>
+                    }
+                </div>
+            }
+            else
+            {
+                <table class="table-dark-custom w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Company</th>
+                            <th>Industry</th>
+                            <th>Location</th>
+                            <th>HR Email</th>
+                            <th>Website</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int i = 1; }
+                        @foreach (var company in Model)
+                        {
+                            <tr>
+                                <td style="color:var(--text-muted);">@i++</td>
+                                <td>
+                                    <strong>@company.Name</strong>
+                                </td>
+                                <td><span style="color:var(--text-muted);">@company.Industry</span></td>
+                                <td><span style="color:var(--text-muted);"><i class="bi bi-geo-alt me-1"></i>@company.Location</span></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(company.HREmail))
+                                    {
+                                        <a href="mailto:@company.HREmail" style="font-size:0.85rem;">@company.HREmail</a>
+                                    }
+                                    else { <span style="color:var(--text-muted);">—</span> }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(company.Website))
+                                    {
+                                        <a href="@company.Website" target="_blank" style="font-size:0.85rem;">
+                                            <i class="bi bi-box-arrow-up-right me-1"></i>Visit
+                                        </a>
+                                    }
+                                    else { <span style="color:var(--text-muted);">—</span> }
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a asp-action="Details" asp-route-id="@company.Id" class="action-btn view" title="View">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@company.Id" class="action-btn edit" title="Edit">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@company.Id" class="action-btn delete" title="Delete">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

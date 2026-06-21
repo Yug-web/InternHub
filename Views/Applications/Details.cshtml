@@ -1,0 +1,102 @@
+@model InternHub.Models.Application
+@{
+    ViewData["Title"] = "Application Details";
+}
+@functions {
+    string GetStatusClass(string s) => s switch {
+        "Applied"             => "badge-applied",
+        "OAScheduled"         => "badge-oa-scheduled",
+        "OACompleted"         => "badge-oa-completed",
+        "InterviewScheduled"  => "badge-interview-scheduled",
+        "Rejected"            => "badge-rejected",
+        "Selected"            => "badge-selected",
+        _                     => ""
+    };
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1><i class="bi bi-file-earmark-text me-2"></i>Application Details</h1>
+                <p>@Model.Role at @Model.Company?.Name</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-outline-custom">
+                    <i class="bi bi-pencil-fill"></i> Edit
+                </a>
+                <a asp-action="Index" class="btn-outline-custom">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="max-width:700px;">
+        <div class="detail-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h4 class="mb-1">@Model.Role</h4>
+                    <span style="opacity:0.8; font-size:0.95rem;">@Model.Company?.Name</span>
+                </div>
+                <span class="badge-status @GetStatusClass(Model.Status.ToString())">
+                    @Model.Status
+                </span>
+            </div>
+        </div>
+        <div class="detail-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Company</div>
+                        <div class="detail-field-value">@Model.Company?.Name</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Location</div>
+                        <div class="detail-field-value"><i class="bi bi-geo-alt me-1"></i>@Model.Location</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Stipend</div>
+                        <div class="detail-field-value" style="color:var(--success);">
+                            @(Model.Stipend.HasValue ? $"₹{Model.Stipend.Value:N0} / month" : "Not specified")
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Application Date</div>
+                        <div class="detail-field-value">@Model.ApplicationDate.ToString("dd MMMM yyyy")</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Deadline</div>
+                        <div class="detail-field-value" style="@(Model.Deadline.HasValue && Model.Deadline.Value < DateTime.Now ? "color:var(--danger);" : "")">
+                            @(Model.Deadline.HasValue ? Model.Deadline.Value.ToString("dd MMMM yyyy") : "No deadline")
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Current Status</div>
+                        <div class="detail-field-value">
+                            <span class="badge-status @GetStatusClass(Model.Status.ToString())">@Model.Status</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Notes</div>
+                        <div class="detail-field-value" style="white-space:pre-line;">
+                            @(string.IsNullOrEmpty(Model.Notes) ? "No notes added." : Model.Notes)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

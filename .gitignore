@@ -1,0 +1,48 @@
+## InternHub .gitignore
+
+# Build outputs
+bin/
+obj/
+
+# Visual Studio artifacts
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Published output
+publish/
+
+# Rider / JetBrains
+.idea/
+
+# Production secrets — DO NOT commit this file with real credentials
+appsettings.Production.json
+
+# LocalDB / SQL Server files (if stored locally)
+*.mdf
+*.ldf
+*.ndf
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# npm / node (if any frontend tooling added later)
+node_modules/
+
+# Logs
+*.log
+
+# NuGet packages cache
+packages/
+*.nupkg
+
+# Environment variables
+.env

@@ -1,0 +1,57 @@
+@model InternHub.Models.Deadline
+@{
+    ViewData["Title"] = "Add Deadline";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <h1><i class="bi bi-calendar-plus me-2"></i>Add Deadline</h1>
+        <p>Set a reminder for an important date.</p>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" placeholder="e.g. Microsoft OA Deadline" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label asp-for="Priority" class="form-label"></label>
+                    <select asp-for="Priority" class="form-select"
+                            asp-items="Html.GetEnumSelectList<InternHub.Models.Priority>()">
+                    </select>
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DueDate" class="form-label"></label>
+                    <input asp-for="DueDate" type="date" class="form-control"
+                           value="@DateTime.Now.AddDays(7).ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"
+                              placeholder="What needs to be done before this deadline?"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="section-divider" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Cancel</a>
+                <button type="submit" class="btn-primary-custom">
+                    <i class="bi bi-check-circle-fill"></i> Save Deadline
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

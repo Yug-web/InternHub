@@ -1,0 +1,60 @@
+@model InternHub.Models.Company
+@{
+    ViewData["Title"] = "Edit Company";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <h1><i class="bi bi-pencil-square me-2"></i>Edit Company</h1>
+        <p>Update the details for <strong>@Model.Name</strong>.</p>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Industry" class="form-label"></label>
+                    <input asp-for="Industry" class="form-control" />
+                    <span asp-validation-for="Industry" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Location" class="form-label"></label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Website" class="form-label"></label>
+                    <input asp-for="Website" class="form-control" />
+                    <span asp-validation-for="Website" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="HREmail" class="form-label"></label>
+                    <input asp-for="HREmail" class="form-control" />
+                    <span asp-validation-for="HREmail" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="section-divider" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Cancel</a>
+                <button type="submit" class="btn-primary-custom">
+                    <i class="bi bi-check-circle-fill"></i> Update Company
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

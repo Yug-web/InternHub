@@ -1,0 +1,64 @@
+@model InternHub.Models.Interview
+@{
+    ViewData["Title"] = "Log Interview";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <h1><i class="bi bi-camera-video-fill me-2"></i>Log Interview</h1>
+        <p>Record details about an upcoming or past interview round.</p>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="CompanyId" class="form-label">Company</label>
+                    <select asp-for="CompanyId" asp-items="ViewBag.CompanyId" class="form-select">
+                        <option value="">-- Select a Company --</option>
+                    </select>
+                    <span asp-validation-for="CompanyId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Role" class="form-label"></label>
+                    <input asp-for="Role" class="form-control" placeholder="e.g. Software Engineering Intern" />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="InterviewDate" class="form-label"></label>
+                    <input asp-for="InterviewDate" type="date" class="form-control"
+                           value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <span asp-validation-for="InterviewDate" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="InterviewType" class="form-label"></label>
+                    <select asp-for="InterviewType" class="form-select"
+                            asp-items="Html.GetEnumSelectList<InternHub.Models.InterviewType>()">
+                    </select>
+                    <span asp-validation-for="InterviewType" class="text-danger"></span>
+                </div>
+                <div class="col-12">
+                    <label asp-for="Notes" class="form-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="4"
+                              placeholder="Topics covered, questions asked, feedback received..."></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+            </div>
+
+            <hr class="section-divider" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Cancel</a>
+                <button type="submit" class="btn-primary-custom">
+                    <i class="bi bi-check-circle-fill"></i> Save Interview
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

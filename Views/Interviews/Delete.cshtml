@@ -1,0 +1,48 @@
+@model InternHub.Models.Interview
+@{
+    ViewData["Title"] = "Delete Interview";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <h1><i class="bi bi-trash me-2" style="color:var(--danger);"></i>Delete Interview</h1>
+    </div>
+
+    <div class="delete-card">
+        <div class="delete-header">
+            <div style="font-size:2rem; margin-bottom:0.5rem;">⚠️</div>
+            <h5 class="mb-1">Are you sure?</h5>
+            <small style="opacity:0.8;">This will permanently delete this interview record.</small>
+        </div>
+        <div class="p-4">
+            <div class="detail-field">
+                <div class="detail-field-label">Company</div>
+                <div class="detail-field-value">@Model.Company?.Name</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-field-label">Role</div>
+                <div class="detail-field-value">@Model.Role</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-field-label">Interview Type</div>
+                <div class="detail-field-value">@Model.InterviewType</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-field-label">Date</div>
+                <div class="detail-field-value">@Model.InterviewDate.ToString("dd MMM yyyy")</div>
+            </div>
+
+            <hr class="section-divider" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Cancel</a>
+                <form asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-danger-custom">
+                        <i class="bi bi-trash-fill"></i> Yes, Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

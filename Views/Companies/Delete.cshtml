@@ -1,0 +1,48 @@
+@model InternHub.Models.Company
+@{
+    ViewData["Title"] = "Delete Company";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <h1><i class="bi bi-trash me-2" style="color:var(--danger);"></i>Delete Company</h1>
+    </div>
+
+    <div class="delete-card">
+        <div class="delete-header">
+            <div style="font-size:2rem; margin-bottom:0.5rem;">⚠️</div>
+            <h5 class="mb-1">Are you sure?</h5>
+            <small style="opacity:0.8;">
+                This will permanently delete <strong>@Model.Name</strong> and all its related applications and interviews.
+            </small>
+        </div>
+        <div class="detail-body p-4">
+            <div class="detail-field">
+                <div class="detail-field-label">Company Name</div>
+                <div class="detail-field-value">@Model.Name</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-field-label">Industry</div>
+                <div class="detail-field-value">@Model.Industry</div>
+            </div>
+            <div class="detail-field">
+                <div class="detail-field-label">Location</div>
+                <div class="detail-field-value">@Model.Location</div>
+            </div>
+
+            <hr class="section-divider" />
+            <div class="d-flex gap-2 justify-content-end">
+                <a asp-action="Index" class="btn-outline-custom">
+                    <i class="bi bi-arrow-left"></i> Cancel
+                </a>
+                <form asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn-danger-custom">
+                        <i class="bi bi-trash-fill"></i> Yes, Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+@model InternHub.Models.Interview
+@{
+    ViewData["Title"] = "Interview Details";
+}
+
+<div class="container-fluid px-4">
+    <div class="page-header mb-4" style="background:none; border:none; padding:1.5rem 0 0;">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1><i class="bi bi-camera-video me-2"></i>Interview Details</h1>
+                <p>@Model.InterviewType Round at @Model.Company?.Name</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-outline-custom"><i class="bi bi-pencil-fill"></i> Edit</a>
+                <a asp-action="Index" class="btn-outline-custom"><i class="bi bi-arrow-left"></i> Back</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="max-width:650px;">
+        <div class="detail-header">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h4 class="mb-1">@Model.Role</h4>
+                    <span style="opacity:0.8;">@Model.Company?.Name</span>
+                </div>
+                <span class="badge-status badge-@Model.InterviewType.ToString().ToLower()">
+                    @Model.InterviewType
+                </span>
+            </div>
+        </div>
+        <div class="detail-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Company</div>
+                        <div class="detail-field-value">@Model.Company?.Name</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Interview Date</div>
+                        <div class="detail-field-value">@Model.InterviewDate.ToString("dd MMMM yyyy")</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Interview Type</div>
+                        <div class="detail-field-value">
+                            <span class="badge-status badge-@Model.InterviewType.ToString().ToLower()">@Model.InterviewType</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Role</div>
+                        <div class="detail-field-value">@Model.Role</div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="detail-field">
+                        <div class="detail-field-label">Notes</div>
+                        <div class="detail-field-value" style="white-space:pre-line; line-height:1.7;">
+                            @(string.IsNullOrEmpty(Model.Notes) ? "No notes added." : Model.Notes)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
